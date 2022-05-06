@@ -20,6 +20,7 @@ parser = argparse.ArgumentParser(description="SSD Evaluation on VOC Dataset.")
 parser.add_argument('--net', default="vgg16-ssd",
                     help="The network architecture, it should be of mb1-ssd, mb1-ssd-lite, mb2-ssd-lite or vgg16-ssd.")
 parser.add_argument("--trained_model", type=str)
+parser.add_argument("--pretrained", type=bool, default=False)
 
 parser.add_argument("--dataset_type", default="voc", type=str,
                     help='Specify dataset type. Currently support voc and open_images.')
@@ -152,7 +153,10 @@ if __name__ == '__main__':
         sys.exit(1)
 
     timer.start("Load Model")
-    net.load(args.trained_model)
+    if args.pretrained:
+        net.init_from_pretrained_ssd(args.trained_model)
+    else:
+        net.load(args.trained_model)
     net = net.to(DEVICE)
     print(f'It took {timer.end("Load Model")} seconds to load the model.')
     if args.net == 'vgg16-ssd':

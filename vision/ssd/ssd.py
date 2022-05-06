@@ -120,7 +120,7 @@ class SSD(nn.Module):
         state_dict = {k: v for k, v in state_dict.items() if not (k.startswith("classification_headers") or k.startswith("regression_headers"))}
         model_dict = self.state_dict()
         model_dict.update(state_dict)
-        self.load_state_dict(model_dict, strict=False)
+        self.load_state_dict(model_dict)
         self.classification_headers.apply(_xavier_init_)
         self.regression_headers.apply(_xavier_init_)
 
@@ -132,7 +132,7 @@ class SSD(nn.Module):
         self.regression_headers.apply(_xavier_init_)
 
     def load(self, model):
-        self.load_state_dict(torch.load(model, map_location=lambda storage, loc: storage), strict=False)
+        self.load_state_dict(torch.load(model, map_location=lambda storage, loc: storage))
 
     def save(self, model_path):
         torch.save(self.state_dict(), model_path)
